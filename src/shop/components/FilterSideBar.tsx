@@ -2,8 +2,23 @@ import { Button } from "../../components/ui/button";
 import { Separator } from "../../components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 import { Label } from "../../components/ui/label";
+import { useSearchParams } from "react-router";
 
 export const FilterSidebar = () => {
+
+  const [ searchParams, setSearchParams ] = useSearchParams();
+
+  const currentSizes = searchParams.get('sizes')?.split(',') || []; // xs,s,l,xl
+
+  const handleSizeChanged = (size: string) => {
+    const newSizes = currentSizes.includes(size)
+      ? currentSizes.filter( s => s != size)
+      : [ ...currentSizes, size];
+    
+    searchParams.set('sizes', newSizes.join(','));
+    setSearchParams(searchParams);
+  }
+
   const categories = [
     { id: "tshirts", label: "Camisetas", count: 12 },
     { id: "hoodies", label: "Sudaderas", count: 8 },
@@ -40,9 +55,10 @@ export const FilterSidebar = () => {
           {sizes.map((size) => (
             <Button
               key={size.id}
-              variant="outline"
+              variant={ currentSizes.includes(size.id) ? 'default' : 'outline' }
               size="sm"
               className="h-8"
+              onClick= { () => handleSizeChanged(size.id ) }
             >
               {size.label}
             </Button>
