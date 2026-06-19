@@ -2,8 +2,11 @@ import { CustomJumbotron } from "../../components/CustomJumbotron"
 import { CustomPagination } from '../../../components/custom/CustomPagination';
 import { ProductsGrid } from "../../components/ProductsGrid";
 import { products } from "../../../mocks/products.mock";
+import { useProducts } from "../../hooks/useProducts";
 
 export const HomePage = () => {
+
+  const { data } = useProducts();
   return (
     <div>
       {/* <h1>Hola mundo</h1>
