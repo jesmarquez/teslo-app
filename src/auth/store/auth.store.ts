@@ -1,0 +1,35 @@
+import { create } from 'zustand'
+import type { User } from '../../interfaces/user.response'
+import { loginAction } from '../actions/login.action';
+
+type AuthState = {
+  //Properties
+  user: User | null;
+  token: string | null;
+
+  //Getters
+
+  //Actions
+  login: (email: string, password: string) => Promise<boolean>;
+}
+
+export const useAuthStore = create<AuthState>()((set) => ({
+  user: null,
+  token: null,
+
+  login: async(email: string, password: string ) => {
+    console.log({email, password });
+    try {
+      const data = await loginAction(email, password);
+      console.log({data});
+      localStorage.setItem('token', data.token);
+      set({user: data.user, token: data.token });
+      return true;
+    } catch (error) {
+      console.log(error);
+      set({ user: null, token: null});
+      return false;
+    }
+
+  }
+}))

@@ -1,15 +1,18 @@
+import { useState } from "react"
+import { Link, useNavigate } from "react-router"
 import { Button } from "../../../components/ui/button"
 import { Card, CardContent } from "../../../components/ui/card"
 import { Input } from "../../../components/ui/input"
 import { Label } from "../../../components/ui/label"
 import { CustomLogo } from "../../../components/custom/CustomLogo"
-import { Link, useNavigate } from "react-router"
-import { loginAction } from "../../actions/login.action"
 import { toast } from "sonner"
-import { useState } from "react"
+import { useAuthStore } from "../../store/auth.store"
 
 export const LoginPage = () => {
   const navigate = useNavigate();
+
+  const { login } = useAuthStore();
+
   const [isPosting, setIsPosting ] = useState( false );
 
   const handleLogin = async ( event: FormEvent<HTMLFormElement>) => {
@@ -21,18 +24,17 @@ export const LoginPage = () => {
     const password = formData.get('password') as string;
     // console.log(email);
     // console.log(password);
-    try {
-      const data = await loginAction(email, password);
-      console.log({data});
-      localStorage.setItem('token', data.token);
-      navigate('/');
+    const isValid = await login(email, password);
 
-    } catch(error) {
-      console.log({error});
-      toast.error('Email or password invalid!');
+    if (isValid) {
+      navigate('/');
+      return;
     }
 
+    toast.error('Email or password invalid!');
     setIsPosting(false);
+    return;
+
 
   }
   return (
