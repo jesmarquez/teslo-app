@@ -21,7 +21,7 @@ export const CustomHeader = () => {
 
     if (event.key !== 'Enter') return;
     const query = inputRef.current?.value;
-    console.log(query, typeof(query));
+    // console.log(query, typeof(query));
     const newSearchParams = new URLSearchParams();
 
     if (!query) {
