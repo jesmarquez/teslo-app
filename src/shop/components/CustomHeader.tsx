@@ -10,10 +10,7 @@ import { useAuthStore } from '../../auth/store/auth.store';
 export const CustomHeader = () => {
   const [ searchParams, setSearchParams ] = useSearchParams();
   const { gender } = useParams();
-  const { user, logout } = useAuthStore();
-  
-  console.log({ user });
-
+  const { authStatus, logout, isAdmin } = useAuthStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const query = searchParams.get('query') || '';
 
@@ -72,7 +69,7 @@ export const CustomHeader = () => {
               <Search className="h-5 w-5" />
             </Button>
             {
-              !user ? (
+              authStatus === 'not-authenticated' ? (
                 <Link to="/auth/login">
                   <Button
                     variant='default'
@@ -92,15 +89,18 @@ export const CustomHeader = () => {
                   </Button>
               ) 
             }
-
-            <Link to="/admin">
-              <Button
-                variant='destructive'
-                size='sm'
-                className="ml-2"
-                > Admin
-              </Button>
-            </Link>
+            {
+              isAdmin() && (
+                <Link to="/admin">
+                  <Button
+                    variant='destructive'
+                    size='sm'
+                    className="ml-2"
+                    > Admin
+                  </Button>
+                </Link>
+              )
+            }
             {/* <Button variant="ghost" size="icon" className="relative">
               <ShoppingBag className="h-5 w-5" />
               {cartCount > 0 && <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
