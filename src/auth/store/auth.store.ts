@@ -2,34 +2,42 @@ import { create } from 'zustand'
 import type { User } from '../../interfaces/user.response'
 import { loginAction } from '../actions/login.action';
 
+type AuthStatus = 'authenticated' | 'not-authenticated' | 'checking';
+
 type AuthState = {
   //Properties
   user: User | null;
   token: string | null;
+  authStatus: AuthStatus;
 
   //Getters
 
   //Actions
   login: (email: string, password: string) => Promise<boolean>;
+  logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>()((set) => ({
   user: null,
   token: null,
+  authStatus: 'checking',
 
   login: async(email: string, password: string ) => {
     console.log({email, password });
     try {
       const data = await loginAction(email, password);
-      console.log({data});
+      // console.log({data});
       localStorage.setItem('token', data.token);
       set({user: data.user, token: data.token });
       return true;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       set({ user: null, token: null});
       return false;
     }
-
+  },
+  logout: () => {
+    localStorage.removeItem('token');
+    set({ user: null, token: null});
   }
 }))

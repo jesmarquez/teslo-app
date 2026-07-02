@@ -6,7 +6,7 @@ export const useProducts = () => {
   const { gender } = useParams();
   const [ searchParams ] = useSearchParams();
 
-  console.log('useProducts');
+  // console.log('useProducts');
   
   const limit = searchParams.get('limit') || 9;
   const page =  searchParams.get('page') || 1;
