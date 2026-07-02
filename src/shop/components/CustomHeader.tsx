@@ -63,7 +63,7 @@ export const CustomHeader = () => {
                   defaultValue={ query }
                   placeholder="Buscar productos..." 
                   className="pl-9 w-64 h-9" 
-                  bg-white
+                  bg-white="true"
                   onKeyDown={ handleSearch }/>
               </div>
             </div>
