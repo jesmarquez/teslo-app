@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import type { User } from '../../interfaces/user.response'
 import { loginAction } from '../actions/login.action';
 import { checkAuthAction } from '../actions/check-auth.action';
+import { registerAction } from '../actions/register.action';
 
 type AuthStatus = 'authenticated' | 'not-authenticated' | 'checking';
 
@@ -17,6 +18,7 @@ type AuthState = {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   checkAuthStatus: () => Promise<boolean>;
+  register : (fullname: string, email: string, password: string) => Promise<boolean>; 
 }
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
@@ -31,7 +33,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   },
 
   login: async(email: string, password: string ) => {
-    console.log({email, password });
+    // console.log({email, password });
     try {
       const data = await loginAction(email, password);
       // console.log({data});
@@ -44,6 +46,20 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       set({ user: null, token: null, authStatus: 'not-authenticated'});
       return false;
     }
+  },
+  register: async(fullname: string, email: string, password: string ) => {
+    console.log({fullname, email, password});
+    
+    try {
+      const data = await registerAction(fullname, email, password);
+      console.log(data);
+      return true;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch(error) {
+      set({ user: null, token: null, authStatus: 'not-authenticated'});
+      return false;
+    }
+
   },
   logout: () => {
     localStorage.removeItem('token');
